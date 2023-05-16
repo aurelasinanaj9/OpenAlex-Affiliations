@@ -6,6 +6,11 @@ Created on Tue May 16 10:27:55 2023
 @author: aurelasinanaj
 """
 
+import os
+
+print(os.getcwd())
+
+
 # open compressed file and read line line by line
 # to get json object 
 # look at record
@@ -26,7 +31,7 @@ import json
 
 
 # only few have authorships values
-with gzip.open('part_000.gz','rt') as f:
+with gzip.open('/Users/aurelasinanaj/Documents/GitHub/OpenAlex-Affiliations/part_000.gz','rt') as f:
     for line in f:
         if json.loads(line).get('authorships') !=[]:
             print(json.loads(line).get('authorships')) 

@@ -67,7 +67,7 @@ with gzip.open('dblp.xml.gz', 'rb') as f:
 
 handler.save_to_csv('data.csv')
 
-with gzip.open('dblp.xml.gz', 'rt') as f:
+with gzip.open('/Users/aurelasinanaj/Documents/GitHub/OpenAlex-Affiliations/dblp.xml.gz', 'rt') as f:
     for line in f:
         if line.startswith("<ee>"):
             print(line)

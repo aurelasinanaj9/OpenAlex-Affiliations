@@ -17,8 +17,9 @@ Created on Tue May  9 10:33:13 2023
 
 
 # DBLP
-import xml.sax
+#import xml.sax
 import gzip
+import csv
 
 
 # so we have to problems: the compressed file is too big, and we had a problem
@@ -27,61 +28,62 @@ import gzip
 #In this case, the entity reference "á" is not defined in the XML file, which 
 #is causing the parser to raise an error.
 
+    
+# Open the input file
+with gzip.open('dblp.xml.gz', 'rt') as f:
+    # Open the output compressed CSV file in write mode
+    with gzip.open('dblp.csv.gz', 'wt', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        
+        for line in f:
+            line = line.strip() # Remove leading/trailing whitespaces
+            if line.startswith('"') and line.endswith('"'):
+                line = line[1:-1] 
+            
+            if line.startswith("<author>"):
+                author = line.strip()
+                writer.writerow([author])        
+                
+            if line.startswith("<title>"):
+                title = line.strip()
+                writer.writerow([title])  # Write the tag and value to CSV
+            
+            if line.startswith('<ee type="oa">https://doi.org'):
+                ee = line.strip()
+                writer.writerow([ee])  # Write the tag and value to CSV
+            
+            if line.startswith("<ee>https://doi.org/"):
+                ee = line.strip()
+                writer.writerow([ee])  # Write the tag and value to CSV
 
+# modified code in order to eliminate some lines that had quotation marks, in
+# order to get all tags
 
-class MyHandler(xml.sax.ContentHandler):
-    def __init__(self):
-        self.current_tag = None
-        self.csv_data = []
+line_author=0
+line_title=0
+line_ee=0
 
-    def startElement(self, name, attrs):
-        self.current_tag = name
-
-    def characters(self, content):
-        if self.current_tag == "ee":
-            self.csv_data.append(content)
-
-    def save_to_csv(self, filename):
-        import csv
-        with open(filename, mode='w', newline='') as file:
-            writer = csv.writer(file)
-            for row in self.csv_data:
-                writer.writerow([row])
-
-
-
-with gzip.open('dblp.xml.gz', 'rb') as f:
-    parser = xml.sax.make_parser()            
-    # Set the ContentHandler of the parser to our custom handler
-    handler = MyHandler()
-    parser.setContentHandler(handler)
-
-    # Parse the XML file incrementally
-    context = iter(lambda: f.read(1024*1024), b'')
-    for chunk in context:
-        parser.feed(chunk)
-
-    # Clear the parser to prevent memory leaks
-    parser.close()
-
-
-handler.save_to_csv('data.csv')
-
-with gzip.open('/Users/aurelasinanaj/Documents/GitHub/OpenAlex-Affiliations/dblp.xml.gz', 'rt') as f:
+with gzip.open('dblp.csv.gz', 'rt') as f:
     for line in f:
+        if line.startswith("<author>"):
+            line_author+=1
+            
+        if line.startswith("<title>"):
+            line_title+=1
+            
         if line.startswith("<ee>"):
-            print(line)
-    
-    
+            line_ee+=1
 
-#22 approx in original file author_position
-# PUT IN output
-# id , authorships records and doi 
-#  wirte again in a compressed file
 
-# read linne,  parse ons extract data and dwrite it (incnrementally)
-#add title too
-# if no doi do not write out
-# display  name adn  title
-# versiion control system
+line_count=0
+with gzip.open('dblp.csv.gz', 'rt') as f:
+    for line in f:
+        line_count+=1 
+        
+# line_count
+# Out[64]: 35790715   
+# found out that not all tags are equivalent        
 
+# line_ee/line_title
+# Out[138]: 0.5492263854625677
+# a little over 50% of titles have doi link

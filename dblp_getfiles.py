@@ -87,3 +87,25 @@ with gzip.open('dblp.csv.gz', 'rt') as f:
 # line_ee/line_title
 # Out[138]: 0.5492263854625677
 # a little over 50% of titles have doi link
+
+# NOW WAY BETTER THIS CODE:
+
+output_file = 'output_dblp_ee.csv.gz'
+
+with gzip.open('dblp.xml.gz', 'rt') as f, gzip.open(output_file, 'wt') as csvfile:
+    writer = csv.writer(csvfile)
+
+    for line in f:
+        if line.startswith('<ee>https://doi.org/'):
+            match = re.search(r'<ee>https://doi.org/(.+)</ee>', line)
+            if match:
+                extracted_string = match.group(1)
+                writer.writerow([extracted_string])        
+        
+        if line.startswith('<ee type="oa">https://doi.org'):
+            match = re.search(r'<ee type="oa">https://doi.org/(.+)</ee>', line)
+            if match:
+                extracted_string = match.group(1)
+                writer.writerow([extracted_string])
+                
+print(f"Extraction complete. Output saved to {output_file}")

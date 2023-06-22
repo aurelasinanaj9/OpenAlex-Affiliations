@@ -55,30 +55,35 @@ for root, dirs, files in os.walk(input_folder_path, followlinks=True):
                     data = json.loads(line)
 
                     if data.get('authorships') and isinstance(data['authorships'], list):
+                        
+                        contains_raw_affiliation = False
+                        
                         for authorship in data['authorships']:
                             raw_affiliations = authorship.get('raw_affiliation_strings') or authorship.get(
                                 'raw_affiliation_string')
-
                             if raw_affiliations:
-                                doi = data.get('doi')
-                                if doi and doi.startswith('https://doi.org/'):
-                                    doi = doi[len('https://doi.org/'):]  # Remove the initial part
-                                    if doi in doi_set:
-                                        # Step 3: Save the matched and unmatched data into separate files
-                                        matched_entry = {
-                                            'id': data.get('id'),
-                                            'doi': data.get('doi'),
-                                            'title': data.get('title'),
-                                            'authorships': data.get('authorships'),
-                                            'publication_year': data.get('publication_year')
-                                        }
-                                        matched_file.write(json.dumps(matched_entry) + '\n')
-                                    else:
-                                        unmatched_entry = {
-                                            'id': data.get('id'),
-                                            'doi': data.get('doi'),
-                                            'title': data.get('title'),
-                                            'authorships': data.get('authorships'),
-                                            'publication_year': data.get('publication_year')
-                                        }
-                                        unmatched_file.write(json.dumps(unmatched_entry) + '\n')
+                                contains_raw_affiliation = True
+
+                        if contains_raw_affiliation:
+                            doi = data.get('doi')
+                            if doi and doi.startswith('https://doi.org/'):
+                                doi = doi[len('https://doi.org/'):]  # Remove the initial part
+                                if doi in doi_set:
+                                    # Step 3: Save the matched and unmatched data into separate files
+                                    matched_entry = {
+                                        'id': data.get('id'),
+                                        'doi': data.get('doi'),
+                                        'title': data.get('title'),
+                                        'authorships': data.get('authorships'),
+                                        'publication_year': data.get('publication_year')
+                                    }
+                                    matched_file.write(json.dumps(matched_entry) + '\n')
+                                else:
+                                    unmatched_entry = {
+                                        'id': data.get('id'),
+                                        'doi': data.get('doi'),
+                                        'title': data.get('title'),
+                                        'authorships': data.get('authorships'),
+                                        'publication_year': data.get('publication_year')
+                                    }
+                                    unmatched_file.write(json.dumps(unmatched_entry) + '\n')

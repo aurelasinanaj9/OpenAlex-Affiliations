@@ -168,59 +168,8 @@ with gzip.open(file, 'rt') as f:
             else: 
                 no_affiliation +=1
 
-        
-            
-            
-# with gzip.open(file, 'rt') as f:
-#     for line in f:
-#         data = json.loads(line)
 
-#         total_papers += 1
 
-#         has_ror = False
-#         author_count = 0
-#         ror_count = 0
-
-#         for authorship in data['authorships']:
-#             if 'author' in authorship:
-#                 total_authors += 1
-#                 author_count += len(authorship['author'])
-                
-#             if 'orcid' in authorship['author'] and authorship['author']['orcid']:
-#                 has_orcid += 1
-                
-#             if 'raw_affiliation_string' in authorship and authorship['raw_affiliation_string']:
-#                 count_authors_with_affiliation += 1
-
-#             ror_found = False  # Flag to track if "ror" key is found for an author
-
-#             for institution in authorship['institutions']:
-#                 if 'ror' in institution and institution['ror']:
-#                     count_authors_with_ror += 1
-#                     has_ror = True
-#                     ror_found = True
-#                     ror_count += 1  # Increment ror_count for each "ror" key found
-
-#             if ror_found:
-#                 break  # Break the loop if a "ror" key is found for the current author
-
-#         if not has_ror:
-#             count_papers_without_ror += 1
-#             #print(data)
-            
-#         if ror_count == 1 and author_count > 1:
-#             count_papers_with_only_one_ror += 1
-
-#         ror_counts += ror_count  # Increment ror_counts by ror_count
-
-# # Get the top 10 "ror" keys based on absolute count
-# top_10_ror_keys = ror_counts.most_common(10)            
-            
-
-            
-            
-            
-            
             
 
 

@@ -47,6 +47,7 @@ at_least_one_missing_ror = 0
 same_ror_count_author = 0
 at_least_1_missing_ror=0
 no_ror = 0
+publication_years = []
 
 
 with gzip.open(file, 'rt') as f:
@@ -59,6 +60,10 @@ with gzip.open(file, 'rt') as f:
         author_count = 0
         ror_count = 0
         single_ror=0
+        
+        publication_year = data.get('publication_year')
+        if publication_year:
+            publication_years.append(publication_year)
 
         for authorship in data['authorships']:
             if 'author' in authorship:
@@ -98,6 +103,10 @@ with gzip.open(file, 'rt') as f:
             no_ror +=1
         else:
             at_least_1_missing_ror +=1
+
+
+
+
 
 
 
@@ -169,21 +178,7 @@ with gzip.open(file, 'rt') as f:
                 no_affiliation +=1
 
 
-
             
-
-
-file_t = 'matched_file_time.json.gz'    
-        
-publication_years = []
-
-with gzip.open(file_t, 'rt') as f:
-    for line in f:
-        data = json.loads(line)
-        publication_year = data.get('publication_year')
-        if publication_year:
-            publication_years.append(publication_year)
-
  
 # LINE PLOT
 year_counts = {year: publication_years.count(year) for year in set(publication_years)}

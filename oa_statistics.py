@@ -16,18 +16,27 @@ from tabulate import tabulate
 
 # STATISTICS
 
+# Looking at all present papers
+original = 'part_001.gz'
+all_papers=0
+with gzip.open(original, 'rt') as json_file:
+    for line in json_file:
+        all_papers+=1
+# 711099        
+        
+
 # Looking at matched and unmateched works
 matched=0
 with gzip.open('matched_file.json.gz', 'rt') as json_file:
     for line in json_file:
         matched+=1
-#27784
+#12492
          
 unmatched=0
 with gzip.open('unmatched_file.json.gz', 'rt') as json_file:
     for line in json_file:
         unmatched+=1
-#617806         
+#206341         
 
 
 
@@ -145,8 +154,6 @@ with gzip.open(file, 'rt') as f:
 
     
 
-
-
 u = 0
 with gzip.open(file, 'rt') as f:
     for line in f:
@@ -180,12 +187,11 @@ with gzip.open(file, 'rt') as f:
 
             
  
-# LINE PLOT
 year_counts = {year: publication_years.count(year) for year in set(publication_years)}
 sorted_years = sorted(year_counts.keys())
 
 
-
+# LINE PLOT
 plt.plot(sorted_years, [year_counts[year] for year in sorted_years])
 plt.xlabel('Publication Year')
 plt.ylabel('Number of Papers')
@@ -253,12 +259,6 @@ for ror, count in top_10_rors:
 
 table_rors = tabulate(table_data_rors, headers=["ROR", "Count", "Percentage (authors)"], tablefmt="pipe")
 print(table_rors)
-
-
-
-
-
-
 
 
 

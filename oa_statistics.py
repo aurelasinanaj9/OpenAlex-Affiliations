@@ -120,39 +120,10 @@ with gzip.open(file, 'rt') as f:
         else:
             at_least_1_missing_ror +=1
 
-
-
-
-
-
-
 # print(f"Number of authorships with more than one 'ror' key: {single_ror}")
 
-author_count=0
-yes=0
-affiliation_count=0
-no_affiliation=0
-with gzip.open(file, 'rt') as f:
-    for line in f:
-        data = json.loads(line)
-        
-        affiliation_count=0
-        author_count=0
-
-        for authorship in data['authorships']:
-            if 'author_position' in authorship:
-                author_count += 1
-                
-            if 'raw_affiliation_string' in authorship and authorship['raw_affiliation_string']:
-                affiliation_count +=1
-            else: 
-                no_affiliation +=1
-        if author_count == affiliation_count:
-            yes +=1
 
 
-            
- 
 year_counts = {year: publication_years.count(year) for year in set(publication_years)}
 sorted_years = sorted(year_counts.keys())
 

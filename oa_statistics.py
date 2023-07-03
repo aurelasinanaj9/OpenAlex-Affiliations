@@ -31,7 +31,8 @@ with gzip.open('matched_file.json.gz', 'rt') as json_file:
     for line in json_file:
         matched+=1
 #12492
-         
+     
+    
 unmatched=0
 with gzip.open('unmatched_file.json.gz', 'rt') as json_file:
     for line in json_file:
@@ -91,16 +92,19 @@ with gzip.open(file, 'rt') as f:
                     ror_counts[ror] += 1
                     
                     ror_count += 1
+                    
+            if ror_count >=1:
+                ror_count_per_author += 1
            
-        if ror_count > 1: 
-            single_ror += 1         
+        # if ror_count > 1: 
+        #     single_ror += 1         
 
         if not has_ror:
             count_papers_without_ror += 1
             #print(data)
             
-        if ror_count >=1:
-            ror_count_per_author += 1
+        # if ror_count >=1:
+        #     ror_count_per_author += 1
             
         if ror_count == 1 and author_count > 1:
             count_papers_with_only_one_ror += 1 

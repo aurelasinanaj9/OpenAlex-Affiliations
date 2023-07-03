@@ -9,6 +9,7 @@ Created on Sun Jun 11 17:22:16 2023
 import json
 import gzip
 import matplotlib.pyplot as plt
+import os
 
 from collections import Counter
 from tabulate import tabulate
@@ -17,30 +18,24 @@ from tabulate import tabulate
 # STATISTICS
 
 # Looking at all present papers
-original = 'part_001.gz'
-all_papers=0
-with gzip.open(original, 'rt') as json_file:
-    for line in json_file:
-        all_papers+=1      
+# original = 'part_001.gz'
+# all_papers=0
+# with gzip.open(original, 'rt') as json_file:
+#     for line in json_file:
+#         all_papers+=1      
         
+        
+# unmatched=0
+# with gzip.open('unmatched_file.json.gz', 'rt') as json_file:
+#     for line in json_file:
+#         unmatched+=1        
 
-# Looking at matched and unmateched works
+
+
+folder_path = 'output'
+
 matched=0
-with gzip.open('matched_file.json.gz', 'rt') as json_file:
-    for line in json_file:
-        matched+=1
-     
-    
-unmatched=0
-with gzip.open('unmatched_file.json.gz', 'rt') as json_file:
-    for line in json_file:
-        unmatched+=1        
-
-
-
-file = 'matched_file.json.gz'
-
-
+# unmatched=0
 total_papers = 0
 total_authors = 0
 count_papers_without_ror = 0
@@ -57,68 +52,73 @@ no_affiliation=0
 affiliation_different = 0
 
 
-with gzip.open(file, 'rt') as f:
-    for line in f:
-        data = json.loads(line)
+for root, dirs, files in os.walk(folder_path):
+    for file in files:
+        if file.startswith('matched'):
+            file_path = os.path.join(root, file)
 
-        total_papers += 1
+            with gzip.open(file_path, 'rt') as f:
+                for line in f:
+                    data = json.loads(line)
 
-        affiliation_count=0
-        author_count = 0
-        ror_count = 0
-        single_ror=0
+                    total_papers += 1
+
+                    affiliation_count=0
+                    author_count = 0
+                    ror_count = 0
+                    single_ror=0
         
-        affiliation_count = 0
+                    affiliation_count = 0
         
-        publication_year = data.get('publication_year')
-        if publication_year:
-            publication_years.append(publication_year)
+                    publication_year = data.get('publication_year')
+                    if publication_year:
+                        publication_years.append(publication_year)
 
-        for authorship in data['authorships']:
-            if 'author' in authorship:
-                total_authors += 1
-                author_count += 1
+                    for authorship in data['authorships']:
+                        if 'author' in authorship:
+                            total_authors += 1
+                            author_count += 1
                 
-            if 'orcid' in authorship['author'] and authorship['author']['orcid']:
-                has_orcid += 1
+                        if 'orcid' in authorship['author'] and authorship['author']['orcid']:
+                            has_orcid += 1
                 
-            raw_affiliations = authorship.get('raw_affiliation_strings') or authorship.get(
+                        raw_affiliations = authorship.get('raw_affiliation_strings') or authorship.get(
                                 'raw_affiliation_string')
-            if raw_affiliations:
-                affiliation_count +=1 
+                        if raw_affiliations:
+                            affiliation_count +=1 
 
-            for institution in authorship['institutions']:
-                if 'ror' in institution and institution['ror']:
+                        for institution in authorship['institutions']:
+                            if 'ror' in institution and institution['ror']:
                     
-                    ror = institution['ror']
-                    ror_counts[ror] += 1
+                                ror = institution['ror']
+                                ror_counts[ror] += 1
                     
-                    ror_count += 1
+                                ror_count += 1
                     
-            if ror_count >=1:
-                ror_count_per_author += 1
+                        if ror_count >=1:
+                            ror_count_per_author += 1
            
-            if ror_count >= 1: 
-                single_ror += 1         
+                        if ror_count >= 1: 
+                            single_ror += 1         
                 
-        if author_count == affiliation_count:
-            affiliation_yes +=1
-        elif affiliation_count == 0:
-            no_affiliation +=1
-        else:
-            affiliation_different +=1        
+                    if author_count == affiliation_count:
+                        affiliation_yes +=1
+                    elif affiliation_count == 0:
+                        no_affiliation +=1
+                    else:
+                        affiliation_different +=1        
 
             
-        if single_ror == 1 and author_count > 1:
-            count_papers_with_only_one_ror += 1 
+                    if single_ror == 1 and author_count > 1:
+                        count_papers_with_only_one_ror += 1 
             
-        if single_ror == author_count:
-            same_ror_count_author +=1
+                    if single_ror == author_count:
+                        same_ror_count_author +=1
             
-        elif single_ror == 0 :
-            count_papers_without_ror += 1
-        else:
-            at_least_1_missing_ror +=1
+                    elif single_ror == 0 :
+                        count_papers_without_ror += 1
+                    else:
+                        at_least_1_missing_ror +=1
 
 # print(f"Number of authorships with more than one 'ror' key: {single_ror}")
 
@@ -162,8 +162,7 @@ percentage_affiliation_different = ( affiliation_different / total_papers ) * 10
 
 # Prepare the table data
 table_data = [
-    ["Total number of papers:",all_papers],
-    ["Total number of matched papers:",matched],
+    ["Total number of matched papers:",total_papers],
     ["Total number of unmatched papers:",unmatched],
     ["Total number of authors", total_authors],
     ["Average number of authors per paper:", "{:.2f}".format(average_authors_per_paper)],

@@ -210,4 +210,14 @@ table_rors = tabulate(table_data_rors, headers=["ROR", "Count", "Percentage (aut
 print(table_rors)
 
 
+# Save the statistics to a file
+output_file = "statistics.txt"
+output_path = os.path.join("output", output_file)
+
+with open(output_path, "w") as f:
+    f.write(table)
+    f.write("\n")
+    f.write(table_rors)
+
+print("Statistics saved successfully!")
 

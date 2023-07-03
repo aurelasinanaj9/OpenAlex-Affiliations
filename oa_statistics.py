@@ -21,8 +21,7 @@ original = 'part_001.gz'
 all_papers=0
 with gzip.open(original, 'rt') as json_file:
     for line in json_file:
-        all_papers+=1
-# 711099        
+        all_papers+=1      
         
 
 # Looking at matched and unmateched works
@@ -30,14 +29,12 @@ matched=0
 with gzip.open('matched_file.json.gz', 'rt') as json_file:
     for line in json_file:
         matched+=1
-#12492
      
     
 unmatched=0
 with gzip.open('unmatched_file.json.gz', 'rt') as json_file:
     for line in json_file:
-        unmatched+=1
-#206341         
+        unmatched+=1        
 
 
 
@@ -102,9 +99,6 @@ with gzip.open(file, 'rt') as f:
         if not has_ror:
             count_papers_without_ror += 1
             #print(data)
-            
-        # if ror_count >=1:
-        #     ror_count_per_author += 1
             
         if ror_count == 1 and author_count > 1:
             count_papers_with_only_one_ror += 1 
@@ -207,8 +201,6 @@ for ror, count in top_10_rors:
 
 table_rors = tabulate(table_data_rors, headers=["ROR", "Count", "Percentage (authors)"], tablefmt="pipe")
 print(table_rors)
-
-
 
 
 

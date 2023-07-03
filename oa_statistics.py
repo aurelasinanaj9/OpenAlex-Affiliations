@@ -96,8 +96,8 @@ with gzip.open(file, 'rt') as f:
             if ror_count >=1:
                 ror_count_per_author += 1
            
-        # if ror_count > 1: 
-        #     single_ror += 1         
+            if ror_count >= 1: 
+                single_ror += 1         
 
         if not has_ror:
             count_papers_without_ror += 1
@@ -120,11 +120,10 @@ with gzip.open(file, 'rt') as f:
 
 print(f"Number of authorships with more than one 'ror' key: {single_ror}")
 
-
-same_ror_count_author = 0
-at_least_1_missing_ror=0
-no_ror = 0
-pap = 0
+tot = 0
+same_ror_count_authors = 0
+at_least_1_missing_rors=0
+no = 0
 with gzip.open(file, 'rt') as f:
     for line in f:
         data = json.loads(line)
@@ -132,7 +131,6 @@ with gzip.open(file, 'rt') as f:
         has_ror = False
         author_count=0
         single_ror=0
-        pap += 1
 
         for authorship in data['authorships']:
             if 'author' in authorship:
@@ -143,14 +141,16 @@ with gzip.open(file, 'rt') as f:
                         has_ror = True
                         break  # Break the loop once a single "ror" key is found for an author
             single_ror += 1 if has_ror else 0
+            
+            if single_ror >= 1:
+                tot +=1
                 
         if single_ror == author_count:
-            same_ror_count_author +=1
-        elif single_ror == 0 :
-            no_ror +=1
+            same_ror_count_authors +=1
+        elif single_ror == 0:
+            no +=1
         else:
-            at_least_1_missing_ror +=1
-
+            at_least_1_missing_rors +=1
 
 
 

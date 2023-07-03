@@ -48,13 +48,13 @@ ror_counts = Counter()
 has_orcid=0
 count_papers_with_only_one_ror = 0
 ror_count_per_author=0
-affiliation_count = 0
-no_affiliation = 0
-at_least_one_missing_ror = 0
 same_ror_count_author = 0
 at_least_1_missing_ror=0
 no_ror = 0
 publication_years = []
+affiliation_yes=0
+no_affiliation=0
+affiliation_different = 0
 
 
 with gzip.open(file, 'rt') as f:
@@ -63,10 +63,12 @@ with gzip.open(file, 'rt') as f:
 
         total_papers += 1
 
-        has_ror = False
+        affiliation_count=0
         author_count = 0
         ror_count = 0
         single_ror=0
+        
+        affiliation_count = 0
         
         publication_year = data.get('publication_year')
         if publication_year:
@@ -80,10 +82,13 @@ with gzip.open(file, 'rt') as f:
             if 'orcid' in authorship['author'] and authorship['author']['orcid']:
                 has_orcid += 1
                 
+            raw_affiliations = authorship.get('raw_affiliation_strings') or authorship.get(
+                                'raw_affiliation_string')
+            if raw_affiliations:
+                affiliation_count +=1 
 
             for institution in authorship['institutions']:
                 if 'ror' in institution and institution['ror']:
-                    has_ror = True
                     
                     ror = institution['ror']
                     ror_counts[ror] += 1
@@ -95,36 +100,55 @@ with gzip.open(file, 'rt') as f:
            
             if ror_count >= 1: 
                 single_ror += 1         
+                
+        if author_count == affiliation_count:
+            affiliation_yes +=1
+        elif affiliation_count == 0:
+            no_affiliation +=1
+        else:
+            affiliation_different +=1        
 
-        if not has_ror:
-            count_papers_without_ror += 1
-            #print(data)
             
-        if ror_count == 1 and author_count > 1:
+        if single_ror == 1 and author_count > 1:
             count_papers_with_only_one_ror += 1 
             
         if single_ror == author_count:
             same_ror_count_author +=1
             
         elif single_ror == 0 :
-            no_ror +=1
+            count_papers_without_ror += 1
         else:
             at_least_1_missing_ror +=1
 
 
-print(f"Number of authorships with more than one 'ror' key: {single_ror}")
 
 
 
+
+
+# print(f"Number of authorships with more than one 'ror' key: {single_ror}")
+
+author_count=0
+yes=0
+affiliation_count=0
+no_affiliation=0
 with gzip.open(file, 'rt') as f:
     for line in f:
         data = json.loads(line)
+        
+        affiliation_count=0
+        author_count=0
 
         for authorship in data['authorships']:
+            if 'author_position' in authorship:
+                author_count += 1
+                
             if 'raw_affiliation_string' in authorship and authorship['raw_affiliation_string']:
                 affiliation_count +=1
             else: 
                 no_affiliation +=1
+        if author_count == affiliation_count:
+            yes +=1
 
 
             
@@ -161,24 +185,32 @@ percentage_author_affiliation = (affiliation_count / total_authors) * 100
 percentage_author_orcid = (has_orcid / total_authors) * 100
 percentage_papers_with_only_one_ror = ( count_papers_with_only_one_ror / total_papers) * 100
 percentage_no_affiliation  = ( no_affiliation / total_authors ) * 100
+percentage_at_least_1_missing_ror = ( at_least_1_missing_ror / total_papers ) * 100
+percentage_same_ror_count_author = ( same_ror_count_author / total_papers ) * 100
 
 # Prepare the table data
 table_data = [
+    ["Total number of papers",all_papers],
     ["Total number of matched papers:",matched],
     ["Total number of unmatched papers:",unmatched],
     ["Total number of authors", total_authors],
     ["Average number of authors per paper", "{:.2f}".format(average_authors_per_paper)],
     ["Number of authors with at least one 'ror' key", ror_count_per_author],
     ["Percentage of authors with at least one matching non-empty 'ror' key", "{:.2f}%".format(percentage_author_ror)],
+    ["Papers with no 'ror' key",count_papers_without_ror],
+    ["Percentage of papers without any 'ror' key", "{:.2f}%".format(percentage_paper_noror)],
     ["Papers with only one 'ror' but more than one 'author':", count_papers_with_only_one_ror],
     ["Percentage of papers with only one 'ror' but more than one 'author':", "{:.2f}%".format(percentage_papers_with_only_one_ror)],
+    ["Count of papers with at least one missing 'ror' key",at_least_1_missing_ror],
+    ["Percentage of papers with at least one missing 'ror' key", "{:.2f}%".format(percentage_at_least_1_missing_ror)],
+    ["Count of papers with non missing ror keys ",same_ror_count_author],
+    ["Percentage of papers with non missing ror keys", "{:.2f}%".format(percentage_same_ror_count_author)],
     ["Percentage of authors with a non-empty 'orcid'", "{:.2f}%".format(percentage_author_orcid)],
-    ["Number of papers without any 'ror' key", count_papers_without_ror],
-    ["Percentage of papers without any 'ror' key", "{:.2f}%".format(percentage_paper_noror)],
-    ["Number of authors with a non-empty 'raw_affiliation_string'", affiliation_count],
+    ["Number of papers with a non-empty 'raw_affiliation_string'", yes_affiliation],
+    [,],
     ["Percentage of authors with a non-empty 'raw_affiliation_string'", "{:.2f}%".format(percentage_author_affiliation)],
     ["Number of authors with an empty 'raw_affiliation_string'", no_affiliation],
-    ["Percentage of authors with a non-empty 'raw_affiliation_string'", "{:.2f}%".format(percentage_no_affiliation)],
+    ["Percentage of authors with an empty 'raw_affiliation_string'", "{:.2f}%".format(percentage_no_affiliation)],
 ]
 
 

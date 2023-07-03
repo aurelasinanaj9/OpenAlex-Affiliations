@@ -152,36 +152,41 @@ average_authors_per_paper = total_authors / total_papers
 # Calculate the percentages
 percentage_author_ror = (ror_count_per_author / total_authors) * 100
 percentage_paper_noror = (count_papers_without_ror / total_papers) * 100
-percentage_author_affiliation = (affiliation_count / total_authors) * 100
+percentage_affiliation = (affiliation_yes / total_papers) * 100
 percentage_author_orcid = (has_orcid / total_authors) * 100
 percentage_papers_with_only_one_ror = ( count_papers_with_only_one_ror / total_papers) * 100
-percentage_no_affiliation  = ( no_affiliation / total_authors ) * 100
+percentage_no_affiliation  = ( no_affiliation / total_papers ) * 100
 percentage_at_least_1_missing_ror = ( at_least_1_missing_ror / total_papers ) * 100
 percentage_same_ror_count_author = ( same_ror_count_author / total_papers ) * 100
+percentage_affiliation_different = ( affiliation_different / total_papers ) * 100
 
 # Prepare the table data
 table_data = [
-    ["Total number of papers",all_papers],
+    ["Total number of papers:",all_papers],
     ["Total number of matched papers:",matched],
     ["Total number of unmatched papers:",unmatched],
     ["Total number of authors", total_authors],
-    ["Average number of authors per paper", "{:.2f}".format(average_authors_per_paper)],
-    ["Number of authors with at least one 'ror' key", ror_count_per_author],
-    ["Percentage of authors with at least one matching non-empty 'ror' key", "{:.2f}%".format(percentage_author_ror)],
-    ["Papers with no 'ror' key",count_papers_without_ror],
-    ["Percentage of papers without any 'ror' key", "{:.2f}%".format(percentage_paper_noror)],
+    ["Average number of authors per paper:", "{:.2f}".format(average_authors_per_paper)],
+    ["Number of authors with at least one 'ror' key:", ror_count_per_author],
+    ["Percentage of authors with at least one matching non-empty 'ror' key:", "{:.2f}%".format(percentage_author_ror)],
+    ["Papers with no 'ror' key:",count_papers_without_ror],
+    ["Percentage of papers without any 'ror' key:", "{:.2f}%".format(percentage_paper_noror)],
     ["Papers with only one 'ror' but more than one 'author':", count_papers_with_only_one_ror],
     ["Percentage of papers with only one 'ror' but more than one 'author':", "{:.2f}%".format(percentage_papers_with_only_one_ror)],
-    ["Count of papers with at least one missing 'ror' key",at_least_1_missing_ror],
-    ["Percentage of papers with at least one missing 'ror' key", "{:.2f}%".format(percentage_at_least_1_missing_ror)],
-    ["Count of papers with non missing ror keys ",same_ror_count_author],
-    ["Percentage of papers with non missing ror keys", "{:.2f}%".format(percentage_same_ror_count_author)],
-    ["Percentage of authors with a non-empty 'orcid'", "{:.2f}%".format(percentage_author_orcid)],
-    ["Number of papers with a non-empty 'raw_affiliation_string'", yes_affiliation],
-    [,],
-    ["Percentage of authors with a non-empty 'raw_affiliation_string'", "{:.2f}%".format(percentage_author_affiliation)],
-    ["Number of authors with an empty 'raw_affiliation_string'", no_affiliation],
-    ["Percentage of authors with an empty 'raw_affiliation_string'", "{:.2f}%".format(percentage_no_affiliation)],
+    ["Count of papers with at least one missing 'ror' key:",at_least_1_missing_ror],
+    ["Percentage of papers with at least one missing 'ror' key:", "{:.2f}%".format(percentage_at_least_1_missing_ror)],
+    ["Count of papers with non missing ror keys (each author has ror key):",same_ror_count_author],
+    ["Percentage of papers with non missing ror keys (each author has ror key):", "{:.2f}%".format(percentage_same_ror_count_author)],
+    ["Percentage of authors with a non-empty 'orcid':", "{:.2f}%".format(percentage_author_orcid)],
+    ["Number of papers for which each author has a 'raw_affiliation_string':", affiliation_yes],
+    ["Percentage of papers for which each author has a 'raw_affiliation_string':", "{:.2f}%".format(percentage_affiliation)],
+    ["Percentage of papers with no 'raw affiliation string':","{:.2f}%".format(percentage_no_affiliation)],
+    ["Count of papers with at least one missinng 'raw affiiliation string':",affiliation_different],                                                                                              
+    ["Count of papers with at least one missinng 'raw affiiliation string':","{:.2f}%".format(percentage_affiliation_different)],
+    
+    # ["Percentage of authors with a non-empty 'raw_affiliation_string'", "{:.2f}%".format(percentage_author_affiliation)],
+    # ["Number of authors with an empty 'raw_affiliation_string'", no_affiliation],
+    # ["Percentage of authors with an empty 'raw_affiliation_string'", "{:.2f}%".format(percentage_no_affiliation)],
 ]
 
 

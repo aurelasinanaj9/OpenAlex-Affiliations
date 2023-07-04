@@ -163,7 +163,7 @@ percentage_affiliation_different = ( affiliation_different / total_papers ) * 10
 # Prepare the table data
 table_data = [
     ["Total number of matched papers:",total_papers],
-    ["Total number of unmatched papers:",unmatched],
+    #["Total number of unmatched papers:",unmatched],
     ["Total number of authors", total_authors],
     ["Average number of authors per paper:", "{:.2f}".format(average_authors_per_paper)],
     ["Number of authors with at least one 'ror' key:", ror_count_per_author],

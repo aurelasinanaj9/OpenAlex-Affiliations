@@ -6,25 +6,51 @@ Created on Tue Jul  4 14:11:25 2023
 @author: aurelasinanaj
 """
 
+
 import os
 import gzip
 import json
-import csv
 
+
+# getting a random sample
 folder_path = 'output'
+lines_to_extract = 10000 # total number of lines (papers) to extract
 
-for root, dirs, files in os.walk(folder_path):
-    for file in files:
-        if file.startswith('matched'):
-            file_path = os.path.join(root, file)
+output_file = 'output.json.gz'
+output_file_path = os.path.join(folder_path, output_file)
 
-            with gzip.open(file_path, 'rt') as f:
-                for line in f:
-                    
-                    
-                    
-                    
-with gzip.open('matched_file.json.gz', 'rt') as f,\
+with gzip.open(output_file_path, 'wt') as output:
+    lines_written = 0
+
+    for root, dirs, files in os.walk(folder_path):
+        for file in files:
+            if file.startswith('matched'):
+                file_path = os.path.join(root, file)
+
+                with gzip.open(file_path, 'rt') as f:
+                    for line_num, line in enumerate(f):
+                        if lines_written >= lines_to_extract:
+                            break
+
+                        line_data = json.loads(line)
+                        output.write(json.dumps(line_data) + '\n')
+                        lines_written += 1
+
+                if lines_written >= lines_to_extract:
+                    break
+
+            if lines_written >= lines_to_extract:
+                break
+
+        if lines_written >= lines_to_extract:
+            break
+
+print("Extraction complete. Lines saved in:", output_file_path)
+
+
+
+# creating the csv file with only the data we need
+with gzip.open('output.json.gz', 'rt') as f,\
         gzip.open('sample.csv.gz', 'wt') as sample:
             
             writer = csv.writer(sample)
@@ -49,34 +75,4 @@ with gzip.open('matched_file.json.gz', 'rt') as f,\
                      
              
                      
-                     
-with gzip.open('matched_file.json.gz', 'rt') as f,\
-        gzip.open('sample.csv.gz', 'wt') as sample:
-
-             for line in f:
-                 data = json.loads(line) 
-                 id_oa = data.get('id')
-                 sample.write(id_oa + '\n') 
-                 
-                 for authorship in data['authorships']:
-                     for institution in authorship['institutions']:
-                         ror = institution.get('ror')
-                         if ror:
-                             sample.write(ror + '\n')
-                         else:
-                             sample.write("not present" + '\n')
-                    
-                     raw_affiliations = authorship.get('raw_affiliation_strings') or authorship.get(
-                                'raw_affiliation_string')
-             write = {'id_oa': data.get('id'),
-                      'doi': data.get('doi'),
-                      'title': data.get('title'),
-                      'authorships': data.get('authorships'),
-                      'publication_year': data.get('publication_year')
-             }
-             matched_file.write(json.dumps(matched_entry) + '\n')        
-                     
-                     sample.write(raw_affiliations + '\n')                     
-                     
-             
-# need to find way to save in columns
+        

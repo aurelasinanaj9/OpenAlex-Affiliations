@@ -47,11 +47,9 @@ from s2aff.model import NERPredictor, PairwiseRORLightGBMReranker
 input_file = 'sample.csv.gz'
 output_file = 'predicted_values.csv.gz'
 
-with gzip.open(input_file, 'rt') as csv_in,\
-    gzip.open(output_file, 'wt', newline='') as csv_out:
-        
+with gzip.open(input_file, 'rt') as csv_in, gzip.open(output_file, 'wt', newline='') as csv_out:
     reader = csv.DictReader(csv_in)
-    writer = csv.DictWriter(csv_out, fieldnames=reader.fieldnames)
+    writer = csv.DictWriter(csv_out, fieldnames=reader.fieldnames + ['s2aff_perdiction'])
 
     writer.writeheader()  # Write the header to the output file
 
@@ -68,10 +66,8 @@ with gzip.open(input_file, 'rt') as csv_in,\
         for i, j in zip(reranked_candidates[:5], reranked_scores[:5]):
             s2aff_perdiction.append(f"{ror_index.ror_dict[i]['id']}: {j}")
 
-            row['s2aff_perdiction'] = ', '.join(s2aff_perdiction)
-
-            writer.writerow(row)    
-                    
+        row['s2aff_perdiction'] = ', '.join(s2aff_perdiction)
+        writer.writerow(row)
                     
                     
                     

@@ -9,6 +9,8 @@ import csv
 import gzip
 import json
 
+
+
 # creating the csv file with only the data we need
 with gzip.open('output/output.json.gz', 'rt') as f,\
         gzip.open('sample.csv.gz', 'wt') as sample:
@@ -17,7 +19,8 @@ with gzip.open('output/output.json.gz', 'rt') as f,\
             writer.writerow(['oa_id', 'oa_count', 'affiliation_string', 'ror_id'])  # Header
 
             for line in f:
-                z = 0
+                unique_combinations = set()
+                z= 0
                 data = json.loads(line) 
                 oa_id = data.get('id')
 
@@ -38,8 +41,12 @@ with gzip.open('output/output.json.gz', 'rt') as f,\
 
 
                     for ror in ror_list:
-                        z+=1
-                        writer.writerow([oa_id,z, raw_affiliations, ror])
+                        combination = (ror, raw_affiliations)
+                        if combination not in unique_combinations:
+                            unique_combinations.add(combination)
+                            z+= 1
+                            writer.writerow([oa_id,z, raw_affiliations, ror])
+                        
                         
                         
                         

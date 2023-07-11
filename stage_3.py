@@ -27,20 +27,22 @@ with gzip.open(input_file, 'rt') as csv_in, gzip.open(output_file, 'wt', newline
     writer.writeheader()  # Write the header to the output file
 
     for row in reader:
-        affiliation_string = row['affiliation_string'] 
-        ner_predictor = NERPredictor(use_cuda=False)
-        ror_index = RORIndex()  
-        pairwise_model = PairwiseRORLightGBMReranker(ror_index)
-        candidates, scores = ror_index.get_candidates_from_raw_affiliation(affiliation_string, ner_predictor)
-        reranked_candidates, reranked_scores = pairwise_model.predict(affiliation_string, candidates[:100], scores[:100])
+        # checking non-empty raw affiliation string
+        if row['affiliation_string']:
+            affiliation_string = row['affiliation_string'] 
+            ner_predictor = NERPredictor(use_cuda=False)
+            ror_index = RORIndex()  
+            pairwise_model = PairwiseRORLightGBMReranker(ror_index)
+            candidates, scores = ror_index.get_candidates_from_raw_affiliation(affiliation_string, ner_predictor)
+            reranked_candidates, reranked_scores = pairwise_model.predict(affiliation_string, candidates[:100], scores[:100])
 
-        # Process the computed values and update the corresponding row
-        s2aff_perdiction = []
-        for i, j in zip(reranked_candidates[:5], reranked_scores[:5]):
-            s2aff_perdiction.append(f"{ror_index.ror_dict[i]['id']}: {j}")
+            # Process the computed values and update the corresponding row
+            s2aff_perdiction = []
+            for i, j in zip(reranked_candidates[:5], reranked_scores[:5]):
+                s2aff_perdiction.append(f"{ror_index.ror_dict[i]['id']}: {j}")
 
-        row['s2aff_perdiction'] = ', '.join(s2aff_perdiction)
-        writer.writerow(row)
+            row['s2aff_perdiction'] = ', '.join(s2aff_perdiction)
+            writer.writerow(row)
                     
                     
                     

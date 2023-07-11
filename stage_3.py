@@ -38,7 +38,7 @@ output_file = 'predicted_values.csv.gz'
 #             candidates, scores = ror_index.get_candidates_from_raw_affiliation(affiliation_string, ner_predictor)
 #             reranked_candidates, reranked_scores = pairwise_model.predict(affiliation_string, candidates[:100], scores[:100])
 
-#             # process the computed values and update the corresponding row
+#             # process the computed values and update the corresponding row7
 #             s2aff_perdiction = []
 #             for i, j in zip(reranked_candidates[:5], reranked_scores[:5]):
 #                 s2aff_perdiction.append(f"{ror_index.ror_dict[i]['id']}: {j}")
@@ -86,6 +86,7 @@ with gzip.open(input_file, 'rt') as csv_in, gzip.open(output_file, 'wt', newline
         if line_count % print_count == 0:
             print(f"Lines written: {line_count} - Date and Time: {datetime.now()}")
 
-print("End.")                 
-                    
+print("End.")                
+
+
                     

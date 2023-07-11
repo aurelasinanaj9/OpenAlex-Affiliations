@@ -48,12 +48,31 @@ import random
 # print("Extraction complete. Lines saved in:", output_file_path)
 
 
-with gzip.open('output/updated_date=2023-02-01/matched_part_013.json.gz', 'rt') as f,\
-        gzip.open('output/output.json.gz', 'wt') as sample:
-            for index, line in enumerate(f): 
-                sample.write(line)
+# with gzip.open('output/updated_date=2023-02-01/matched_part_013.json.gz', 'rt') as f,\
+#         gzip.open('output/output.json.gz', 'wt') as sample:
+#             for index, line in enumerate(f): 
+#                 sample.write(line)
         
-                if index + 1 >= 10000:
-                    break
+#                 if index + 1 >= 10000:
+#                     break
             
-print("Extraction complete. Lines saved")
+# print("Extraction complete. Lines saved")
+
+output_file = 'output/output.json.gz'
+
+with gzip.open(output_file, 'wt') as sample:
+    for folder_name in os.listdir('output'):
+        folder_path = os.path.join('output', folder_name)
+        
+        if os.path.isdir(folder_path) and folder_name.startswith('updated_date='):
+            for file_name in os.listdir(folder_path):
+                if file_name.startswith('matched'):
+                    file_path = os.path.join(folder_path, file_name)
+                    
+                    with gzip.open(file_path, 'rt') as f:
+                        lines = f.readlines()
+                        if len(lines) >= 1:
+                            sample.write(lines[0])
+
+print("Extraction complete. Lines saved.")
+

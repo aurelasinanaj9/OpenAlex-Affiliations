@@ -59,20 +59,44 @@ import random
 # print("Extraction complete. Lines saved")
 
 output_file = 'output/output.json.gz'
+i = 0
+length = 1
+position = 0
 
 with gzip.open(output_file, 'wt') as sample:
+    
+    length += 1
+    position += 1
     for folder_name in os.listdir('output'):
         folder_path = os.path.join('output', folder_name)
         
         if os.path.isdir(folder_path) and folder_name.startswith('updated_date='):
+            
             for file_name in os.listdir(folder_path):
                 if file_name.startswith('matched'):
                     file_path = os.path.join(folder_path, file_name)
                     
                     with gzip.open(file_path, 'rt') as f:
                         lines = f.readlines()
-                        if len(lines) >= 1:
-                            sample.write(lines[0])
+                        if len(lines) >= length:
+                            sample.write(lines[position])
+                            i += 1
+                            
+                
+                        if i >= 10000:
+                            break
+                            
+            if i >= 10000:
+                break
+            
+                        
+                            
 
 print("Extraction complete. Lines saved.")
+
+
+
+        
+        
+
 

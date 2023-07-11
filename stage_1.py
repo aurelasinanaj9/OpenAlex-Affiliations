@@ -95,7 +95,37 @@ with gzip.open(output_file, 'wt') as sample:
 print("Extraction complete. Lines saved.")
 
 
+output_file = 'output/output.json.gz'
+lines_to_retrieve = 10000
 
+with gzip.open(output_file, 'wt') as sample:
+    line_count = 0
+    line_position = 0
+
+    while line_count < lines_to_retrieve:
+        for folder_name in os.listdir('output'):
+            folder_path = os.path.join('output', folder_name)
+
+            if os.path.isdir(folder_path) and folder_name.startswith('updated_date='):
+                for file_name in os.listdir(folder_path):
+                    if file_name.startswith('matched'):
+                        file_path = os.path.join(folder_path, file_name)
+
+                        with gzip.open(file_path, 'rt') as f:
+                            lines = f.readlines()
+                            if len(lines) > line_position:
+                                sample.write(lines[line_position])
+                                line_count += 1
+
+                    if line_count >= lines_to_retrieve:
+                        break
+
+            if line_count >= lines_to_retrieve:
+                break
+
+        line_position += 1
+
+print("Extraction complete. Lines saved.")
         
         
 

@@ -1,3 +1,3 @@
-# OpenAlex Affiliations - WORKING IN PROGRESS
+# OpenAlex Affiliations
  
-Research project, trying to match affiliations from the OpenAlex Dataset to DBLP.
+The main goal is to create a system that reads and selects relevant data from the openAlex data dump obtaining a relevant dataset (in this case all the information on the works have been narrowed down and selected based on the doi link matches with those present in the dblp database). After this is done, the system goes through each file created (more specifically only looking into the matched papers) and searching for possible errors in the matching of the affiliation strings by comparing these to a pretrained model that enables to link raw affiliation strings to ror ids (s2aff).

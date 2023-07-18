@@ -30,7 +30,7 @@ output_folder_path = 'output'
 for root, dirs, files in os.walk(input_folder_path, followlinks=True):
     # Get the relative path of the current folder
     relative_path = os.path.relpath(root, input_folder_path)
-    relative_path = relative_path.strip('')
+    print(relative_path)
     
     # Create the corresponding subfolder in the output directory
     output_subfolder = os.path.join(output_folder_path, relative_path)

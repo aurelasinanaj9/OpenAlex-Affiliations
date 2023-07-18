@@ -126,6 +126,32 @@ for root, dirs, files in os.walk(folder_path):
 
 year_counts = {year: publication_years.count(year) for year in set(publication_years)}
 sorted_years = sorted(year_counts.keys())
+print('Sorted years:')
+print(sorted_years)
+print('\n')
+print('Years counts:')
+print(year_counts)
+print('\n')
+max_year = max(year_counts, key=lambda x: year_counts[x])
+print("year with the highest count:", max_year)
+
+
+for root, dirs, files in os.walk(folder_path):
+    for file in files:
+        if file.startswith('matched'):
+            file_path = os.path.join(root, file)
+            #if os.path.getsize(file_path) == 0:
+               #     continue
+
+            with gzip.open(file_path, 'rt') as f:
+                    for line in f:
+                        data = json.loads(line)
+                        if 'publication_year' in data:
+                            publication_year = data['publication_year']
+                            if publication_year == 2107 or publication_year == 2032 or publication_year == 1800 or publication_year == 1900:
+                                print(f"File: {file}\nSubfolder: {os.path.basename(root)}\nLine: {line}")
+
+
 
 
 # LINE PLOT
@@ -133,7 +159,9 @@ plt.plot(sorted_years, [year_counts[year] for year in sorted_years])
 plt.xlabel('Publication Year')
 plt.ylabel('Number of Papers')
 plt.title('Distribution of Published Papers over Years')
+plt.xlim(1950,2040)
 plt.show()
+plt.savefig('plot_1.png')
         
        
 # BAR PLOT
@@ -141,7 +169,9 @@ plt.bar(sorted_years, [year_counts[year] for year in sorted_years])
 plt.xlabel('Publication Year')
 plt.ylabel('Number of Papers')
 plt.title('Distribution of Published Papers over Years')
+plt.xlim(1950,2040)
 plt.show()
+plt.savefig('plot_2.png')
 
         
     
@@ -163,7 +193,7 @@ percentage_affiliation_different = ( affiliation_different / total_papers ) * 10
 # Prepare the table data
 table_data = [
     ["Total number of matched papers:",total_papers],
-    #["Total number of unmatched papers:",unmatched],
+   # ["Total number of unmatched papers:",unmatched],
     ["Total number of authors", total_authors],
     ["Average number of authors per paper:", "{:.2f}".format(average_authors_per_paper)],
     ["Number of authors with at least one 'ror' key:", ror_count_per_author],
@@ -180,8 +210,8 @@ table_data = [
     ["Number of papers for which each author has a 'raw_affiliation_string':", affiliation_yes],
     ["Percentage of papers for which each author has a 'raw_affiliation_string':", "{:.2f}%".format(percentage_affiliation)],
     ["Percentage of papers with no 'raw affiliation string':","{:.2f}%".format(percentage_no_affiliation)],
-    ["Count of papers with at least one missinng 'raw affiiliation string':",affiliation_different],                                                                                              
-    ["Count of papers with at least one missinng 'raw affiiliation string':","{:.2f}%".format(percentage_affiliation_different)],
+    ["Count of papers with at least one missing 'raw affiiliation string':",affiliation_different],                                                                                              
+    ["Percentage of papers with at least one missing 'raw affiiliation string':","{:.2f}%".format(percentage_affiliation_different)],
     
     # ["Percentage of authors with a non-empty 'raw_affiliation_string'", "{:.2f}%".format(percentage_author_affiliation)],
     # ["Number of authors with an empty 'raw_affiliation_string'", no_affiliation],
@@ -193,6 +223,7 @@ table_data = [
 
 # Generate the table
 table = tabulate(table_data, headers=["Metric", "Value"], tablefmt="pipe")
+table_2 = tabulate(table_data, headers=["Metric", "Value"], tablefmt="latex")
 
 # Display the table
 print(table)
@@ -207,6 +238,8 @@ for ror, count in top_10_rors:
     table_data_rors.append([ror, count, "{:.2f}%".format(percentage)])
 
 table_rors = tabulate(table_data_rors, headers=["ROR", "Count", "Percentage (authors)"], tablefmt="pipe")
+table_rors_2 = tabulate(table_data_rors, headers=["ROR", "Count", "Percentage (authors)"], tablefmt="latex")
+print("\n")
 print(table_rors)
 
 
@@ -214,10 +247,30 @@ print(table_rors)
 output_file = "statistics.txt"
 output_path = os.path.join("output", output_file)
 
+output_file_2 = "statistics_2.tex"
+output_path_2 = os.path.join("output", output_file_2)
+
+output_file_ror = "statistics_ror.txt"
+output_path_ror = os.path.join("output", output_file_ror)
+
+output_file_ror_2 = "statistics_ror_2.tex"
+output_path_ror_2 = os.path.join("output", output_file_ror_2)
+
 with open(output_path, "w") as f:
     f.write(table)
-    f.write("\n")
+
+    
+with open(output_path_2, "w") as f:
+    f.write(table_2)
+
+    
+with open(output_path_ror, "w") as f:
     f.write(table_rors)
 
-print("Statistics saved successfully!")
+    
+with open(output_path_ror_2, "w") as f:
+    f.write(table_rors_2)
+
+
+print("statistics saved.")
 

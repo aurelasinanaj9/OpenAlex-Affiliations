@@ -19,6 +19,11 @@ from s2aff.model import NERPredictor, PairwiseRORLightGBMReranker
 input_file = 'sample.csv.gz'
 output_file = 'predicted_values.csv.gz'
             
+
+ner_predictor = NERPredictor(use_cuda=False)
+ror_index = RORIndex()
+pairwise_model = PairwiseRORLightGBMReranker(ror_index)
+
                    
 with gzip.open(input_file, 'rt') as csv_in, gzip.open(output_file, 'wt', newline='') as csv_out:
     reader = csv.DictReader(csv_in)
@@ -31,11 +36,8 @@ with gzip.open(input_file, 'rt') as csv_in, gzip.open(output_file, 'wt', newline
 
     for row in reader:
         # checking non-empty raw affiliation string
-        if row['affiliation_string']:
-            affiliation_string = row['affiliation_string']
-            ner_predictor = NERPredictor(use_cuda=False)
-            ror_index = RORIndex()
-            pairwise_model = PairwiseRORLightGBMReranker(ror_index)
+        affiliation_string = row['affiliation_string'].strip() # if there is a space at beginning of string the code does not work
+        if affiliation_string:
             candidates, scores = ror_index.get_candidates_from_raw_affiliation(affiliation_string, ner_predictor)
             reranked_candidates, reranked_scores = pairwise_model.predict(affiliation_string, candidates[:100], scores[:100])
 

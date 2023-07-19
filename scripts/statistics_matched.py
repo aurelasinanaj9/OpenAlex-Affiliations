@@ -23,6 +23,9 @@ matching_ror_third = 0
 matching_ror_fourth = 0
 matching_ror_fifth = 0
 
+
+
+
 with gzip.open('predicted_values.csv.gz', 'rt') as file:
     reader = csv.reader(file)
     header = next(reader)  #skip first row, it is header
@@ -41,23 +44,31 @@ with gzip.open('predicted_values.csv.gz', 'rt') as file:
         
         if ror_oa != 'NA':
             lines_ror += 1
+            
+            if len(ror_pred_dict.keys()) >= 5:
 
-            for key in ror_pred_dict:
-                if ror_oa in key:
-                    matching_ror += 1
+                for key in ror_pred_dict:
+                    if ror_oa in key:
+                        matching_ror += 1
 
-                    if key == list(ror_pred_dict.keys())[0]:
-                        matching_ror_first += 1
-                    elif key == list(ror_pred_dict.keys())[1]:
-                        matching_ror_second += 1
-                    elif key == list(ror_pred_dict.keys())[2]:
-                        matching_ror_third += 1
-                    elif key == list(ror_pred_dict.keys())[3]:
-                        matching_ror_fourth += 1
-                    elif key == list(ror_pred_dict.keys())[4]:
-                        matching_ror_fifth += 1
-        else:
-            no_matching_ror +=1
+                        if key == list(ror_pred_dict.keys())[0]:
+                            matching_ror_first += 1
+                        elif key == list(ror_pred_dict.keys())[1]:
+                            matching_ror_second += 1
+                        elif key == list(ror_pred_dict.keys())[2]:
+                            matching_ror_third += 1
+                        elif key == list(ror_pred_dict.keys())[3]:
+                            matching_ror_fourth += 1
+                        elif key == list(ror_pred_dict.keys())[4]:
+                            matching_ror_fifth += 1
+                            
+                    else:
+                        no_matching_ror +=1
+                
+                if len(ror_pred_dict.keys()) < 5:
+                    
+                    
+                    
 
 # Percentages
 no_matching_ror_p = ( no_matching_ror / lines ) * 100
@@ -83,14 +94,128 @@ table = [
 ]
 
 # Print and save
-table_match = tabulate(table, headers=["Metric", "Count","Percentage"], tablefmt="pipe")
-table_match_2 = tabulate(table, headers=["Metric", "Count"], tablefmt="latex")
+table_match = tabulate(table, headers=["Count", "Percentage"], tablefmt="pipe")
+table_match_2 = tabulate(table, headers=["Count", "Percentage"], tablefmt="latex")
 print(table_match)
 
 output_file_matched = "statistics_matched.tex"
-output_path_matched = os.path.join("output", output_file_matched)
+output_path_matched = os.path.join(output_file_matched)
 
 with open(output_path_matched, "w") as f:
     f.write(table_match_2)
+
+
+
+# Looking into least probable keys with correct prediction
+
+with gzip.open('predicted_values.csv.gz', 'rt') as file:
+    reader = csv.reader(file)
+    header = next(reader)
+
+    # column indices
+    ror_oa_index = header.index('ror_id')
+    ror_pred_index = header.index('s2aff_prediction')
+
+    #iterating over each row in csv file
+    for line in reader:
+        ror_oa = line[ror_oa_index]
+        ror_pred = line[ror_pred_index]
+        ror_pred_dict = ast.literal_eval(ror_pred)
+        
+        if ror_oa != 'NA':
+            if len(ror_pred_dict.keys()) >= 5:
+                
+                for key in ror_pred_dict:
+                    if ror_oa in key:
+                        if key == list(ror_pred_dict.keys())[3] or key == list(ror_pred_dict.keys())[4]:
+                            print(line)
+                            
+            else:
+                print('strange:')
+                print(line)
+                        
+
+
+
+
+matching_ror = 0
+lines = 0
+lines_ror = 0
+no_matching_ror = 0
+matching_ror_first = 0
+matching_ror_second = 0
+matching_ror_third = 0
+matching_ror_fourth = 0
+matching_ror_fifth = 0
+
+
+with gzip.open('predicted_values.csv.gz', 'rt') as file:
+    reader = csv.reader(file)
+    header = next(reader)  # skip first row, it is header
+
+    # column indices
+    ror_oa_index = header.index('ror_id')
+    ror_pred_index = header.index('s2aff_prediction')
+
+    lines = 0
+    lines_ror = 0
+    matching_ror = 0
+    matching_ror_first = 0
+    matching_ror_second = 0
+    matching_ror_third = 0
+    matching_ror_fourth = 0
+    matching_ror_fifth = 0
+    no_matching_ror = 0
+    lines_less_than_5 = 0
+
+    # iterating over each row in the CSV file
+    for line in reader:
+        lines += 1
+
+        ror_oa = line[ror_oa_index]
+        ror_pred = line[ror_pred_index]
+        ror_pred_dict = ast.literal_eval(ror_pred)
+
+        if ror_oa != 'NA':
+            lines_ror += 1
+
+            if len(ror_pred_dict.keys()) >= 5:
+                for key in ror_pred_dict:
+                    if ror_oa in key:
+                        matching_ror += 1
+
+                        if key == list(ror_pred_dict.keys())[0]:
+                            matching_ror_first += 1
+                        elif key == list(ror_pred_dict.keys())[1]:
+                            matching_ror_second += 1
+                        elif key == list(ror_pred_dict.keys())[2]:
+                            matching_ror_third += 1
+                        elif key == list(ror_pred_dict.keys())[3]:
+                            matching_ror_fourth += 1
+                        elif key == list(ror_pred_dict.keys())[4]:
+                            matching_ror_fifth += 1
+                    else:
+                        no_matching_ror += 1
+            else:
+                lines_less_than_5 += 1
+                
+                for key in ror_pred_dict:
+                    if ror_oa in key:
+                        matching_ror += 1
+
+                        if key == list(ror_pred_dict.keys())[0]:
+                            matching_ror_first += 1
+                        elif key == list(ror_pred_dict.keys())[1]:
+                            matching_ror_second += 1
+                        elif key == list(ror_pred_dict.keys())[2]:
+                            matching_ror_third += 1
+                        elif key == list(ror_pred_dict.keys())[3]:
+                            matching_ror_fourth += 1
+                    
+                    else:
+                        no_matching_ror += 1
+                
+
+
 
 

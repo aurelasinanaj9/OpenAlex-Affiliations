@@ -135,7 +135,7 @@ print('\n')
 max_year = max(year_counts, key=lambda x: year_counts[x])
 print("year with the highest count:", max_year)
 
-# Looking into the strange years and displaying them
+
 for root, dirs, files in os.walk(folder_path):
     for file in files:
         if file.startswith('matched'):
@@ -148,39 +148,18 @@ for root, dirs, files in os.walk(folder_path):
                         data = json.loads(line)
                         if 'publication_year' in data:
                             publication_year = data['publication_year']
-                            if publication_year == 2107 or publication_year == 2032 or publication_year == 1800 or publication_year == 1900:
+                            if publication_year == 1936 or publication_year == 1937 or publication_year == 1938 or publication_year == 1939  or publication_year == 1940 or publication_year == 1941:
                                 print(f"File: {file}\nSubfolder: {os.path.basename(root)}\nLine: {line}")
 
 
-# now looking into the range of years before 1970
-print('\n')
-
-years = range(1936, 1971)
-values = [year_counts[year] for year in years]
-
-mean = sum(values) / len(values)
-
-max_value = max(values)
-max_year = years[values.index(max_value)]
-
-min_value = min(values)
-min_year = years[values.index(min_value)]
-
-print("Mean:", mean)
-print('\n')
-print("Maximum value in the range:", max_value)
-print("Year corresponding to the maximum value in the range:", max_year)
-print('\n')
-print("Minimum value in the range:", min_value)
-print("year corresponding to the minimum value in the range:", min_year)
 
 
 # LINE PLOT
 plt.plot(sorted_years, [year_counts[year] for year in sorted_years])
 plt.xlabel('Publication Year')
 plt.ylabel('Number of Papers')
-plt.title('Distribution of Published Papers over Years')
-plt.xlim(1970,2024)
+plt.title('Distribution of Published Papers overt the Years')
+plt.xlim(1950,2024)
 plt.show()
 plt.savefig('plot_1.png')
         
@@ -189,8 +168,8 @@ plt.savefig('plot_1.png')
 plt.bar(sorted_years, [year_counts[year] for year in sorted_years])
 plt.xlabel('Publication Year')
 plt.ylabel('Number of Papers')
-plt.title('Distribution of Published Papers over Years')
-plt.xlim(1970,2024)
+plt.title('Distribution of Published Papers over the Years')
+plt.xlim(1950,2024)
 plt.show()
 plt.savefig('plot_2.png')
 

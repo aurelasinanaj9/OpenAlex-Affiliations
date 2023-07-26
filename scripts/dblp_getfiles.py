@@ -6,18 +6,10 @@ Created on Tue May  9 10:33:13 2023
 @author: aurelasinanaj
 """
 
-# open compressed file and read line line by line
-# to get json object 
-# look at record
-# line by line
-# write compact form
-# entire author block (object)
-# json renderer
-# print line by linne author and doi
+# In this script the goal is to retrieve the relevant doi link (chopped) from the dblp database and 
+# saving them in the file output_dblp_ee.csv.gz that will be later used
 
 
-# DBLP
-#import xml.sax
 import gzip
 import csv
 import re

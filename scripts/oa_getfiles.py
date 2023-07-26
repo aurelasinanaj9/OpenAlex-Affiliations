@@ -6,6 +6,10 @@ Created on Tue May 16 10:27:55 2023
 @author: aurelasinanaj
 """
 
+# Given doi links retrieved from dblp, retrieving those that are matching with those present in 
+# openAlex. More specifically only retrieving, from the matched works, the following relevant keys 
+# 'id','doi','title','authorships','publication_year' after some conditions are met (non emptyness). 
+# Finally, dividing the data dump in matched and unmatched files.
 
 import os
 import gzip

@@ -6,6 +6,8 @@ Created on Thu Jul 20 13:03:33 2023
 @author: aurelasinanaj
 """
 
+# Statistics on affiliations for which less than the expected 5 predictions are made
+
 import gzip
 import csv
 import ast

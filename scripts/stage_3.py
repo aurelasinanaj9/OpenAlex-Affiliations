@@ -6,6 +6,9 @@ Created on Mon Jul  3 19:27:16 2023
 @author: aurelasinanaj
 """
 
+# Testing the matching using the pretrained model from the s2aff repository (in this script generating
+# the predictions that will be saved in the file predicted_values.csv.gz)
+
 import gzip
 from datetime import datetime
 import csv
@@ -16,8 +19,8 @@ from s2aff.model import NERPredictor, PairwiseRORLightGBMReranker
     
 
 # open the input CSV file and create an output csv file
-input_file = 'cropped.csv.gz'
-output_file = 'predicted_values_cropped.csv.gz'
+input_file = 'sample.csv.gz'
+output_file = 'predicted_values.csv.gz'
             
 
 ner_predictor = NERPredictor(use_cuda=False)
@@ -52,7 +55,8 @@ with gzip.open(input_file, 'rt') as csv_in, gzip.open(output_file, 'wt', newline
                 writer.writerow(row)
 
             except ValueError:
-                # Handle the ValueError and continue to the next iteration
+                #handle the valueerror, continue to the next iteration (this error ValueError: Input numpy.ndarray or list must be 2 dimensional is not explainable, code works fine until it gets
+# to line corresponding to oa_id = https://openalex.org/W2121528906, what is fed to model is a string like all the others)
                 continue
 
 

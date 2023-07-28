@@ -9,7 +9,8 @@ import csv
 import gzip
 import json
 
-
+# Creating a table in format csv file from the sample json file with 10 000 papers with the relevant 
+# information (columns 'oa_id', 'oa_count', 'affiliation_string', 'ror_id')
 
 # creating the csv file with only the data we need
 with gzip.open('output/output.json.gz', 'rt') as f,\

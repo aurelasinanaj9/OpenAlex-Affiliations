@@ -6,7 +6,7 @@ Created on Thu Jul 20 13:08:41 2023
 @author: aurelasinanaj
 """
 
-# Statistics on matched affiliations with matching ror in last two keys 
+# Statistics on matched affiliations with matching ror id in last two keys 
 
 import gzip
 import csv

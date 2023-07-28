@@ -6,6 +6,8 @@ Created on Mon Jul 17 16:16:43 2023
 @author: aurelasinanaj
 """
 
+# Statistics on ror ids (those outputted from the model and present ones in openAlex)
+
 import gzip
 import csv
 import ast
@@ -29,8 +31,7 @@ one_pred = 0
 no_ror = 0
 lines_less_than_5 = 0
 
-#cases_less_than_5 = []
-#cases_4_5_key = []
+
 
 # General statistics
 
@@ -175,17 +176,7 @@ with gzip.open('predicted_values.csv.gz', 'rt') as file:
                 no_ror +=1
                 
             
-# with gzip.open('cases_less_than_5.csv.gz', 'wt') as new_file:
-#     writer = csv.writer(new_file)
-#     writer.writerow(header)  # Write the header row first
-#     writer.writerows(cases_less_than_5)
-
-# with gzip.open('cases_matched_4th_5th.csv.gz', 'wt') as new_file:
-#     writer = csv.writer(new_file)
-#     writer.writerow(header)  # Write the header row first
-#     writer.writerows(cases_4_5_key)
-
-                    
+                  
                     
 # Percentages
 no_matching_ror_p = ( no_ror / lines ) * 100
@@ -222,71 +213,5 @@ output_path_matched = os.path.join(output_file_matched)
 
 with open(output_path_matched, "w") as f:
     f.write(table_match_2)
-
-
-
-
-
-
-# Looking into least probable keys with correct prediction
-
-with gzip.open('predicted_values.csv.gz', 'rt') as file:
-    reader = csv.reader(file)
-    header = next(reader)
-
-    # column indices
-    ror_oa_index = header.index('ror_id')
-    ror_pred_index = header.index('s2aff_prediction')
-
-    #iterating over each row in csv file
-    for line in reader:
-        ror_oa = line[ror_oa_index]
-        ror_pred = line[ror_pred_index]
-        ror_pred_dict = ast.literal_eval(ror_pred)
-        
-        if ror_oa != 'NA':
-            if len(ror_pred_dict.keys()) >= 4:
-                
-                for key in ror_pred_dict:
-                    if ror_oa in key:
-                        if key == list(ror_pred_dict.keys())[3] or key == list(ror_pred_dict.keys())[4]:
-                            print(line)
-                            
-            else:
-                print('strange:')
-                print(line)
-          
-
-c=0  
-no =0              
-with gzip.open('predicted_values.csv.gz', 'rt') as file:
-    reader = csv.reader(file)
-    header = next(reader)
-
-    # column indices
-    ror_oa_index = header.index('ror_id')
-    ror_pred_index = header.index('s2aff_prediction')
-
-    #iterating over each row in csv file
-    for line in reader:
-        ror_oa = line[ror_oa_index]
-        ror_pred = line[ror_pred_index]
-        ror_pred_dict = ast.literal_eval(ror_pred)
-        
-        if ror_oa != 'NA':
-            if len(ror_pred_dict.keys()) < 5:
-                
-                if ror_oa in ror_pred_dict:
-                    c +=1
-                    #print('matched:')
-                    #print(line)
-                else:
-                    no +=1
-                        
-                        
-
-                
-
-
 
 

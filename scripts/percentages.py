@@ -7,7 +7,7 @@ Created on Wed Jul 26 20:23:11 2023
 """
 
 # Obtaining data from dblp website on total records + matched records from oa data dump. Obtaining
-# percentages and plotting
+# percentages of coverage and plotting
 
 import matplotlib.pyplot as plt
 

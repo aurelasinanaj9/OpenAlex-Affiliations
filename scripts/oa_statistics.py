@@ -13,23 +13,8 @@ import os
 
 from collections import Counter
 from tabulate import tabulate
-
-
-# STATISTICS
-
-# Looking at all present papers
-# original = 'part_001.gz'
-# all_papers=0
-# with gzip.open(original, 'rt') as json_file:
-#     for line in json_file:
-#         all_papers+=1      
-        
-        
-# unmatched=0
-# with gzip.open('unmatched_file.json.gz', 'rt') as json_file:
-#     for line in json_file:
-#         unmatched+=1        
-
+  
+# Producing stastistics on matched papers 
 
 
 folder_path = 'output'

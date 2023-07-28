@@ -10,7 +10,8 @@ Created on Tue Jul  4 14:11:25 2023
 import os
 import gzip
 
-# retrieving the first line from all files, then second and so on...
+# From all matched files retrieved, obtaining a sample of 10 000 lines (retrieving the first line from all 
+# files, then second and so on...)
 
 output_file = 'output/output.json.gz'
 lines_to_retrieve = 10000
